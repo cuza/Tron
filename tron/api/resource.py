@@ -327,6 +327,13 @@ class JobCollectionResource(resource.Resource):
             num_runs=5,
         )
 
+    def get_job_index(self):
+        jobs = adapter.adapt_many(
+            adapter.JobIndexAdapter,
+            self.job_collection.get_jobs(),
+        )
+        return {job["name"]: job["actions"] for job in jobs}
+
     @AsyncResource.bounded
     def render_GET(self, request):
         include_job_runs = requestargs.get_bool(

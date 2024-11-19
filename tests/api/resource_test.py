@@ -223,7 +223,7 @@ class TestJobCollectionResource(WWWTestCase):
     def test_render_GET(self):
         self.resource.get_data = MagicMock()
         result = self.resource.render_GET(REQUEST)
-        assert_call(self.resource.get_data, 0, False, False, True, True)
+        assert_call(self.resource.get_data, 0, False, False, True, True, None, None)
         assert "jobs" in result
 
     def test_getChild(self):
