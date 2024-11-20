@@ -372,6 +372,16 @@ class JobCollectionResource(resource.Resource):
         )
         return respond(request=request, response=response)
 
+    @AsyncResource.bounded
+    def render_SEARCH(self, request):
+        query = requestargs.get_string(request, "query")
+        jobs = self.job_collection.get_jobs()
+        filtered_jobs = [job for job in jobs if query.lower() in job.get_name().lower()]
+        response = dict(
+            jobs=adapter.adapt_many(adapter.JobAdapter, filtered_jobs),
+        )
+        return respond(request=request, response=response)
+
     @AsyncResource.exclusive
     def render_POST(self, request):
         old_name = requestargs.get_string(request, "old_name")
