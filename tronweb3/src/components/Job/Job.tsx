@@ -6,11 +6,9 @@ import {
 import jobdata from './JobData.json';
 import JobDetails from './JobDetails';
 import ActionGraph from './ActionGraph';
-import { useParams } from '@tanstack/react-router';
 
 
-function Job() {
-  const { jobId } = useParams({ strict: false});
+function Job(jobId: string) {
   const queryClient = useQueryClient()
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ['getJobs'],

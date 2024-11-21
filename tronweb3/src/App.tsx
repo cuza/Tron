@@ -2,8 +2,6 @@ import { Query, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './App.css';
 import Job from './components/Job/Job';
 import Dashboard from './Dashboard';
-import { Outlet, RouterProvider } from '@tanstack/react-router';
-import router from './routes';
 
 
 function App() {
@@ -45,7 +43,7 @@ function App() {
         </nav>
       </header>
       <body>
-        <Outlet />
+        <Dashboard />
       </body>
       <footer className="bg-white">
         <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8 items-center">
