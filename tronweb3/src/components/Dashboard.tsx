@@ -28,10 +28,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-export function Dashboard({ initialData, onPageChange }: { initialData: JobsResponse, onPageChange: (newPage: number) => void }) {
-  const [jobs, setJobs] = useState<Job[]>(initialData.jobs);
+export function Dashboard({ initialData, onPageChange }: { initialData: JobsResponse, onPageChange: (newPage: number) => void }) { // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [jobs, setJobs] = useState<Job[]>(initialData.jobs); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(initialData.pagination.page);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalPages, setTotalPages] = useState(
     Math.ceil(initialData.pagination.total / initialData.pagination.page_size),
   );
