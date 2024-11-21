@@ -93,7 +93,7 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "../components/shadcn/Card";
+} from "./shadcn/Card";
 import {
   Table,
   TableBody,
@@ -101,11 +101,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/shadcn/Table";
-import { Badge } from "../components/shadcn/Badge";
-import { Button } from "../components/shadcn/Button";
-import { Input } from "../components/shadcn/Input";
-import { Label } from "../components/shadcn/Label";
+} from "./shadcn/Table";
+import { Badge } from "./shadcn/Badge";
+import { Button } from "./shadcn/Button";
+import { Input } from "./shadcn/Input";
+import { Label } from "./shadcn/Label";
 import {
   Clock,
   AlertCircle,
@@ -114,7 +114,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-export function Dashboard({ initialData }: { initialData: JobsResponse }) {
+export function Dashboard({ initialData, onPageChange }: { initialData: JobsResponse, onPageChange: (newPage: number) => void }) {
   const [jobs, setJobs] = useState<Job[]>(initialData.jobs);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(initialData.pagination.page);

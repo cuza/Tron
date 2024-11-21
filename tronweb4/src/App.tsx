@@ -1,4 +1,9 @@
-// import { Query, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+"use client";
+import { Query, QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from "react";
+import { Dashboard } from "./components/Dashboard";
+import { Job, JobsResponse } from "./types/job";
+import "./components/tailwind.global.css"
 // import './App.css';
 // import Job from './components/Job/Job';
 // import Dashboard from './components/Dashboard';
@@ -60,13 +65,6 @@
 // }
 
 // export default App;
-
-"use client";
-
-import { useState } from "react";
-import { Dashboard } from "./components/Dashboard";
-import { JobsResponse } from "./types/job";
-import "./components/tailwind.global.css"
 
 // Mock data
 const mockData: JobsResponse = {
@@ -176,30 +174,64 @@ const mockData: JobsResponse = {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [jobsData, setJobsData] = useState(mockData);
+  // const [jobsData, setJobsData] = useState(mockData);
+  const useClient = useQueryClient();
 
-  const fetchJobs = async (page: number) => {
+  const { isPending, error, data, isFetching } = useQuery({
+    queryKey: ['getJobs'],
+    queryFn: async () => {
+      const response = await fetch(
+        `http://tron-infrastage.yelpcorp.com:8089/api/jobs?page=${currentPage}&page_size=2`,
+      )
+      return await response.json()
+    },
+  })
+
+  if (isPending || isFetching) {
+    return <div>Loading...</div>
+  }
+
+  let jobsData = data;
+
+  const fetchJobs = (page: number): void => {
     // In production, this would be an API call
     // For now, we'll just simulate pagination by slicing the mock data
-    const startIndex = (page - 1) * mockData.pagination.page_size;
-    const endIndex = startIndex + mockData.pagination.page_size;
-    const paginatedJobs = mockData.jobs.slice(startIndex, endIndex);
+    const startIndex = (page - 1) * data.pagination.page_size;
+    const endIndex = startIndex + data.pagination.page_size;
+    const paginatedJobs = data.jobs.slice(startIndex, endIndex);
 
-    setJobsData({
+    jobsData = {
       jobs: paginatedJobs,
       pagination: {
-        ...mockData.pagination,
-        page: page,
+        ...data.pagination,
       },
-    });
-    setCurrentPage(page);
+    };
+
+    // setJobsData({
+    //   jobs: paginatedJobs,
+    //   pagination: {
+    //     ...data.pagination,
+    //   },
+    // });
+    // setCurrentPage(page);
   };
+
+  const handlePageChange = (page: number): void => {
+    if (page < 1 || page > data.pagination.total) {
+      return;
+    }
+    setCurrentPage(page);
+  }
+
+  fetchJobs(1)
+
 
   return (
     <div className="container mx-auto py-10">
-      <Dashboard
-        initialData={jobsData}
-      />
+        <Dashboard
+          initialData={jobsData}
+          onPageChange={handlePageChange}
+        />
     </div>
   );
 }
