@@ -360,16 +360,32 @@ class JobCollectionResource(resource.Resource):
         page = requestargs.get_integer(request, "page")
         page_size = requestargs.get_integer(request, "page_size")
 
-        response = dict(
-            jobs=self.get_data(
-                include_job_runs,
-                include_action_runs,
-                include_action_graph,
-                include_node_pool,
-                page,
-                page_size,
-            ),
+        jobs = self.get_data(
+            include_job_runs,
+            include_action_runs,
+            include_action_graph,
+            include_node_pool,
+            page,
+            page_size,
         )
+
+        if page is not None and page_size is not None:
+            total = len(self.job_collection.get_jobs())
+            if page < 1 or page_size < 1:
+                return respond(
+                    request=request,
+                    response={"error": "page and page_size must be positive integers"},
+                    code=http.BAD_REQUEST,
+                )
+            if page > total // page_size:
+                return respond(
+                    request=request,
+                    response={"error": "page out of range"},
+                    code=http.BAD_REQUEST,
+                )
+            response = dict(jobs=jobs, pagination=dict(page=page, page_size=page_size, total=total))
+        else:
+            response = dict(jobs=jobs)
         return respond(request=request, response=response)
 
     @AsyncResource.bounded
@@ -545,7 +561,7 @@ class RootResource(resource.Resource):
         self.putChild(b"api", ApiRootResource(self.mcp))
         self.putChild(b"web", static.File(web_path))
         # Temporarily hard-coded while we build the new UI
-        self.putChild(b"web2", static.File(web_path + "2/build"))
+        self.putChild(b"web3", static.File(web_path + "3/build"))
         self.putChild(b"", self)
 
     def render_GET(self, request):
