@@ -39,7 +39,7 @@ ENV NPM_CONFIG_REGISTRY=${NPM_CONFIG_REGISTRY:-https://npm.yelpcorp.com}
 
 # Get yarn, node and coffeescript
 RUN wget -q -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null && \
-    echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x $(lsb_release -c -s) main" > /etc/apt/sources.list.d/nodesource.list && \
+    echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $(lsb_release -c -s) main" > /etc/apt/sources.list.d/nodesource.list && \
     wget -q -O - https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
     echo 'deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main' > /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
