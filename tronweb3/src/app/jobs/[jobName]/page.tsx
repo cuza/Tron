@@ -1082,67 +1082,100 @@ export default function JobDetailsView() {
               <div>
                 <h3 className="text-lg font-semibold">General Information</h3>
                 <Table>
-                  <TableCaption>A list of your recent invoices.</TableCaption>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px]">Invoice</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Method</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                    </TableRow>
-                  </TableHeader>
                   <TableBody>
-                    {invoices.map((invoice) => (
-                      <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Status</TableCell>
+                        <TableCell>
+                            <Badge variant={job.status === 'enabled' ? 'default' : 'secondary'}>{job.status}</Badge>
+                        </TableCell>
                       </TableRow>
-                    ))}
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Schedule</TableCell>
+                        <TableCell>{job.scheduler.value}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Allow Overlap</TableCell>
+                        <TableCell>{job.allow_overlap ? 'Yes' : 'No'}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Queueing</TableCell>
+                        <TableCell>{job.queueing ? 'Yes' : 'No'}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Max Runtime</TableCell>
+                        <TableCell>{job.max_runtime}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Expected Runtime</TableCell>
+                        <TableCell>{job.expected_runtime}</TableCell>
+                      </TableRow>
                   </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell colSpan={3}>Total</TableCell>
-                      <TableCell className="text-right">$2,500.00</TableCell>
-                    </TableRow>
-                  </TableFooter>
                 </Table>
-
-                <p><strong>Status:</strong></p> <Badge variant={job.status === 'enabled' ? 'default' : 'secondary'}>{job.status}</Badge>
-                <p><strong>Schedule:</strong> {job.scheduler.value}</p>
-                <p><strong>Allow Overlap:</strong> {job.allow_overlap ? 'Yes' : 'No'}</p>
-                <p><strong>Queueing:</strong> {job.queueing ? 'Yes' : 'No'}</p>
-                <p><strong>Max Runtime:</strong> {job.max_runtime}</p>
-                <p><strong>Expected Runtime:</strong> {job.expected_runtime} seconds</p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold">Node Pool</h3>
-                <p><strong>Name:</strong> {job.node_pool.name}</p>
-                <p><strong>Nodes:</strong></p>
-                <ul className="list-disc pl-5">
-                  {job.node_pool.nodes.map((node, index) => (
-                    <li key={index}>{node.name} ({node.hostname})</li>
-                  ))}
-                </ul>
+                <Table>
+                  <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Name</TableCell>
+                        <TableCell>{job.node_pool.name}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Nodes</TableCell>
+                        <TableCell>
+                            <ul className="list-disc pl-5">
+                              {job.node_pool.nodes.map((node, index) => (
+                                <li key={index}>{node.name} ({node.hostname})</li>
+                              ))}
+                            </ul>
+                        </TableCell>
+                      </TableRow>
+                  </TableBody>
+                </Table>
               </div>
               <div>
                 <h3 className="text-lg font-semibold">Monitoring</h3>
-                <p><strong>Alert After:</strong> {job.monitoring.alert_after}</p>
-                <p><strong>Page:</strong> {job.monitoring.page ? 'Yes' : 'No'}</p>
-                <p><strong>Team:</strong> {job.monitoring.team}</p>
-                <p><strong>Ticket:</strong> {job.monitoring.ticket ? 'Yes' : 'No'}</p>
-                {job.monitoring.runbook && (
-                  <p><strong>Runbook:</strong> <a href={job.monitoring.runbook} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Link</a></p>
-                )}
-                {job.monitoring.tip && <p><strong>Tip:</strong> {job.monitoring.tip}</p>}
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-medium w-64">Alert After</TableCell>
+                      <TableCell>{job.monitoring.alert_after}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium w-64">Page</TableCell>
+                      <TableCell>{job.monitoring.page ? 'Yes' : 'No'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium w-64">Team</TableCell>
+                      <TableCell>{job.monitoring.team}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium w-64">Ticket</TableCell>
+                      <TableCell>{job.monitoring.ticket ? 'Yes' : 'No'}</TableCell>
+                    </TableRow>
+                    {job.monitoring.runbook && (
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Runbook</TableCell>
+                        <TableCell>
+                            <a href={job.monitoring.runbook} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Link</a>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {job.monitoring.tip && (
+                      <TableRow>
+                        <TableCell className="font-medium w-64">Tip</TableCell>
+                        <TableCell>{job.monitoring.tip}</TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
               <div>
                 <h3 className="text-lg font-semibold">Action Graph</h3>
                 {job.action_graph.map((action, index) => (
                   <div key={index} className="mt-2">
                     <p><strong>Name:</strong> {action.name}</p>
-                    <p><strong>Command:</strong> <code className="bg-gray-100 p-1 rounded">{action.command}</code></p>
+                    <p><strong>Command: </strong><code className="bg-gray-100 p-1 rounded">&nbsp;{action.command}&nbsp;</code></p>
                   </div>
                 ))}
               </div>
