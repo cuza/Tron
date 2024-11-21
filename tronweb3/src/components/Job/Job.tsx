@@ -27,7 +27,7 @@ function Job(jobId: string) {
   if (!data || error) {
     console.log("Failed to fetch job details: " + error?.message)
   }
-  
+
   return (
     <>
     <div className="mx-auto max-w-7xl px-6 pb-16">
@@ -35,7 +35,7 @@ function Job(jobId: string) {
         <h1 className="text-lg font-semibold">{data.name}</h1>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <JobDetails 
+        <JobDetails
           status={data.status}
           node_pool={data.node_pool}
           scheduler={data.scheduler}

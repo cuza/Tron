@@ -47,7 +47,7 @@ function formatJobs(jobs: any): Array<Job> {
 
 function Dashboard() {
   const queryClient = useQueryClient();
-  
+
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ['getJobs'],
     queryFn: async () => {
