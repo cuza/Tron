@@ -5,6 +5,7 @@ view current state, event history and send commands to trond.
 import collections
 import datetime
 import logging
+import math
 import traceback
 
 import staticconf
@@ -377,7 +378,7 @@ class JobCollectionResource(resource.Resource):
                     response={"error": "page and page_size must be positive integers"},
                     code=http.BAD_REQUEST,
                 )
-            if page > total // page_size:
+            if page > math.ceil(total / page_size):
                 return respond(
                     request=request,
                     response={"error": "page out of range"},
